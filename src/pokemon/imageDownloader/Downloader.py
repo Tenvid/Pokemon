@@ -1,9 +1,11 @@
 import requests
 import re
 import os.path
+from pathlib import Path
 
 # This script will download all files from the URLs/URLs.txt and put them in Downloads directory
 downloadDir = "downloads/"
+
 
 while True:
     response = input("Redownload All files ?(Y,N): ")
@@ -18,6 +20,10 @@ while True:
 
 
 def Download(FileName):
+    # If the downloads folder does not exist, it is created
+    if not Path(downloadDir).exists():
+        Path(downloadDir).mkdir()
+
     with open(FileName, "wb") as file:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
