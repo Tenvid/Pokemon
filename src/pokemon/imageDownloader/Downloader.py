@@ -12,7 +12,7 @@ while True:
     if response in ["Y", "y"]:
         ReDownloadOnlyCorruptedFiles = False
         break
-    if response in ["n", "n"]:
+    if response in ["N", "n"]:
         ReDownloadOnlyCorruptedFiles = True
         # Re-download only corrupted files (sometimes <1kb corrupted files are downloaded from Bulbapedia)
         print("Only new/ corrupted files will be downloaded")
