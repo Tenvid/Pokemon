@@ -3,6 +3,8 @@ import re
 import os.path
 from pathlib import Path
 
+FILE_PATH = "URLs/URLs.txt"
+
 # This script will download all files from the URLs/URLs.txt and put them in Downloads directory
 downloadDir = "downloads/"
 
@@ -25,26 +27,30 @@ def Download(FileName):
         Path(downloadDir).mkdir()
 
     with open(FileName, "wb") as file:
-        for chunk in r.iter_content(chunk_size=1024):
+        for chunk in response.iter_content(chunk_size=1024):
             if chunk:
                 file.write(chunk)
         print("Downloaded: " + url)
 
 
-f = open("URLs/URLs.txt", "r")
-Lines = f.readlines()
-URLs = []
-for line in Lines:
-    URLs.append(line.strip())  # Stripping the newline character
-f.close()
+def get_urls(file_path: str):
+    f = open(file_path, "r")
+    Lines = f.readlines()
+    URLs = []
+    for line in Lines:
+        URLs.append(line.strip())  # Stripping the newline character
+    f.close()
+    return URLs
 
+
+URLs = get_urls(FILE_PATH)
 # Downloading
 for url in URLs:
     try:
-        id = re.search(r"/\d\d\d\d", url).group(0)
-        id = id[1:]
-        fileToDownload = downloadDir + id + ".png"
-        r = requests.get(url, stream=True)
+        pokemon_id = re.search(r"/\d\d\d\d", url).group(0)
+        pokemon_id = pokemon_id[1:]
+        fileToDownload = downloadDir + pokemon_id + ".png"
+        response = requests.get(url, stream=True)
         if not ReDownloadOnlyCorruptedFiles:
             Download(fileToDownload)  # (Re-)Download all files unconditionally
         elif os.path.exists(fileToDownload):
@@ -54,4 +60,4 @@ for url in URLs:
         else:
             Download(fileToDownload)  # Download new file
     except AttributeError:
-        print("An Error Occured for: " + id)
+        print("An Error Occured for: " + pokemon_id)
